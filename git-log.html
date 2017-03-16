@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Yolo</title>
+		<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+	</head>
+	<body>
+		<div class="container">
+			<h2 class="text-center">Git log email formatter</h2>
+			<h5 class="text-center">git log --pretty=oneline TAG..TAG</h5>
+			<textarea id="logs" class="form-control" rows="10" placeholder="Paste here"></textarea>
+			<br/>
+			<button id="copy-to-clipboard" class="btn btn-secondary" data-clipboard-target="#container">Copy to clipboard</button>
+			<div id="container"></div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/clipboard.js/1.6.0/clipboard.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.4/lodash.min.js"></script>
+		<script type="text/javascript">
+			new Clipboard('#copy-to-clipboard');
+			$(function () {
+
+				$('#logs').on('keyup change', function () {
+					var txt = $('#logs').val();
+					var regex = /\[(.+)\]/g;
+					var regex2 = /(TPH\-\d+)/;
+					var matches = [];
+					var match = regex.exec(txt);
+					var html = '<ul>';
+
+					while (match != null) {
+					    matches.push(match[1]);
+					    match = regex.exec(txt);
+					}
+
+					matches = _.uniq(matches);
+
+					for (var i = matches.length - 1; i >= 0; i--) {
+						var id = regex2.exec(matches[i]);
+						if (id) {
+							html += '<li><a href="https://thepricehub.atlassian.net/browse/' + id[1] + '">' + matches[i] + '</a></li>';
+						} else {
+							html += '<li>' + matches[i] + '</li>';
+						}
+					}
+
+					html += '</ul>';
+
+					$('#container').html(html);
+
+				});
+			});
+		</script>
+	</body>
+</html>

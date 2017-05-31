@@ -41,17 +41,18 @@
 
 					for (var i = matches.length - 1; i >= 0; i--) {
 						var id = regex2.exec(matches[i]);
+						var name = _.upperFirst(_.lowerCase(matches[i]));
 						if (id) {
-							html += '<li><a href="https://thepricehub.atlassian.net/browse/' + id[1] + '">' + matches[i] + '</a></li>';
+							name = id[1] + ' : ' +  _.upperFirst(_.lowerCase(matches[i].replace(id[1], '')));
+							html += '<li><a href="https://thepricehub.atlassian.net/browse/' + id[1] + '">' + name + '</a></li>';
 						} else {
-							html += '<li>' + matches[i] + '</li>';
+							html += '<li>' + name + '</li>';
 						}
 					}
 
 					html += '</ul>';
 
 					$('#container').html(html);
-
 				});
 			});
 		</script>
